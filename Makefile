@@ -2,7 +2,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror 
 NAME = alum1
 
-SRCS = main.c
+SRCS =  main.c
 
 OBJS_DIR = OBJS
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
