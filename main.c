@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salshaha <salshaha@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: maemran < maemran@student.42amman.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 18:31:39 by salshaha          #+#    #+#             */
-/*   Updated: 2025/09/05 20:49:21 by salshaha         ###   ########.fr       */
+/*   Updated: 2025/09/05 21:43:50 by maemran          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,3 +213,16 @@ int main(int argc, char **argv)
     
     
 }
+
+
+//  Fix last problem
+//  
+//  convert char **map to array of integers ->  two dimensional array of integer
+//
+//  take input from user
+//
+//  handle input taken from user like -> more than 3 , just nums
+//
+//  using AI function
+//
+//  put this code in infinite loop that wait the winner
