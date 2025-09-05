@@ -2,14 +2,14 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror 
 NAME = alum1
 
-SRCS = main.c
+SRCS = main.c get_next_line.c get_next_line_utils.c
 
 OBJS_DIR = OBJS
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
 all: $(NAME)
 
-$(NAME): $(OBJS) ./include/philo.h
+$(NAME): $(OBJS) 
 	$(CC) $(OBJS) $(CFLAGS) -o $(NAME)
 
 $(OBJS_DIR)/%.o:%.c | $(OBJS_DIR)
