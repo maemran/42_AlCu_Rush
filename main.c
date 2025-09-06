@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maemran < maemran@student.42amman.com>     +#+  +:+       +#+        */
+/*   By: maemran <maemran@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 18:31:39 by salshaha          #+#    #+#             */
-/*   Updated: 2025/09/05 21:43:50 by maemran          ###   ########.fr       */
+/*   Updated: 2025/09/06 09:44:31 by maemran          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,19 +128,22 @@ int heaps_num(char *file, t_game *data)
 {
     int count;
     char    *str;
+	int fd;
     
     count = 0;
-    data->fd = open(file, O_RDONLY);
-    str = get_next_line(data->fd);
+	data->file = file;
+    fd = open(file, O_RDONLY);
+    str = get_next_line(fd);
     while (str)
     {
         if (str[0] == '\n')
             return (-1);
         free(str);
-        str = get_next_line(data->fd);
+        str = get_next_line(fd);
         count++;
     }
     free(str);
+	close(fd);
     return (count);
 }
 
@@ -148,74 +151,77 @@ int  read_from_user(t_game *data)
 {
     char *str;
     int size;
+	int fd;
 
-    data->fd = open("t.text", O_WRONLY | O_TRUNC | O_CREAT, 0666);
+    fd = open("t.text", O_WRONLY | O_TRUNC | O_CREAT, 0777);
     while (1)
     {
         str = get_next_line(0);
         if (str[0] == '\n')
             break;
-        ft_putstr_fd(str, data->fd);
+        ft_putstr_fd(str, fd);
         free(str);
     }
     free(str);
-    close (data->fd);
+    close (fd);
     size = heaps_num("t.text", data);
+	data->file = "t.text";
     return (size);
+}
+
+void	store_file(t_game *data)
+{
+	int fd;
+	char *str;
+	int i;
+	
+	i = 0;
+	data->map = malloc(sizeof(char *) * (data->size + 1));
+	fd = open(data->file, O_RDONLY);
+    str = get_next_line(fd);
+    while (str)
+    {
+        data->map[i] = str;
+        str = get_next_line(fd);
+        i++;
+    }
+    data->map[i] = NULL;
 }
 
 int main(int argc, char **argv)
 {
-    char **map;
     t_game *data;
     int i;
-    char *str;
     // int type;
-    int size;
-
+	
     i = 0;
     // type = 0;
-    data = malloc(sizeof(data));
-    data->fd = 0;
+    data = malloc(sizeof(t_game));
     if (argc == 1)
-        size = read_from_user(data);
+        data->size = read_from_user(data);
     else if (argc == 2)
-        size = heaps_num(argv[1], data);
+        data->size = heaps_num(argv[1], data);
     else
     {
         write(2, "ERROR\n", 6);
         return (1);
     }
-    if (size == -1 || size == 0)
-        return (1); 
-    map = malloc(sizeof(char *) * size + 1);
-    printf("size: %i\n fd: %i\n", size, data->fd);
-    int fd = open("t.txt", O_RDONLY);
-    str = get_next_line(fd);
-    printf("%s\n", str);
-    while (str)
+	if (data->size == -1 || data->size == 0)
+		return (1);
+	store_file(data);
+    while (data->map[i])
     {
-        map[i] = str;
-        str = get_next_line(data->fd);
-        i++;
-    }
-    map[i] = NULL;
-       
-    i = 0;
-    while (map[i])
-    {
-        printf("%s\n", map[i]);
+        printf("%s", data->map[i]);
         i++;
     }
     // if (check_map(map, &type))
     //     return (1);
     // print_map(map, &type);
     
-    
 }
 
 
-//  Fix last problem
+//  Fix last problem          ✅
 //  
 //  convert char **map to array of integers ->  two dimensional array of integer
 //

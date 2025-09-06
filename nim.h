@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nim.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salshaha <salshaha@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: maemran <maemran@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 18:31:32 by salshaha          #+#    #+#             */
-/*   Updated: 2025/09/05 20:26:56 by salshaha         ###   ########.fr       */
+/*   Updated: 2025/09/06 09:42:17 by maemran          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@
 
 typedef struct s_game
 {
-    int fd;
+	char	*file;
+	char	**map;
+	int		size;
 } t_game;
 
 #endif
