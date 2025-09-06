@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nim.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salshaha <salshaha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maemran <maemran@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 18:31:32 by salshaha          #+#    #+#             */
-/*   Updated: 2025/09/06 17:33:18 by salshaha         ###   ########.fr       */
+/*   Updated: 2025/09/06 20:03:11 by maemran          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,12 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 int		ft_atoi(const char *nptr);
 int		ft_isdigit(int c);
-void    change_to_num(t_game *data);
-
+int    change_to_num(t_game *data);
+int		check_move(int matches, t_list *node);
+void    ai_move(t_game *data);
+int     check_input(char *str);
+void    player_move(t_game *data);
+void	game(t_game *data);
+int		check_map(t_game *data, int *type);
 
 #endif

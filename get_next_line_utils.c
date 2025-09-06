@@ -6,41 +6,59 @@
 /*   By: maemran <maemran@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 13:57:29 by maemran           #+#    #+#             */
-/*   Updated: 2024/09/24 09:14:07 by maemran          ###   ########.fr       */
+/*   Updated: 2025/09/06 19:18:38 by maemran          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strncpy(char *dest, char *src, unsigned int n)
+void	ft_strlcpy_gnl(char *dst, const char *src, size_t dstsize)
 {
-	unsigned int	i;
+	size_t	i;
 
 	i = 0;
-	while (src[i] != '\0' && i < n)
+	if (dstsize > 0)
 	{
-		dest[i] = src[i];
-		i++;
+		while (src[i] && i < dstsize - 1)
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
 	}
-	while (i < n)
-	{
-		dest[i] = '\0';
-		i++;
-	}
-	return (dest);
 }
 
-char	*ft_strchr(const char *s, int c)
+void	ft_bzero(void *s, size_t n)
 {
-	while (*s != '\0')
+	size_t	length;
+	char	*ptr;
+
+	length = 0;
+	ptr = (char *)s;
+	while (length < n)
 	{
-		if ((unsigned char)*s == (unsigned char)c)
-			return ((char *)s);
-		s++;
+		ptr[length] = '\0';
+		length++;
 	}
-	if ((unsigned char)c == '\0')
-		return ((char *)s);
-	return (NULL);
+}
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t		length;
+	char		*ptr1;
+	const char	*source;
+
+	length = 0;
+	ptr1 = (char *)dest;
+	source = (const char *)src;
+	if (!ptr1 && !source)
+		return (NULL);
+	while (length < n)
+	{
+		ptr1[length] = source[length];
+		length++;
+	}
+	return (ptr1);
 }
 
 size_t	ft_strlen(const char *s)
@@ -51,47 +69,4 @@ size_t	ft_strlen(const char *s)
 	while (s[length] != '\0')
 		length++;
 	return (length);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*string;
-	int		length;
-
-	string = malloc(ft_strlen(s) + 1);
-	length = 0;
-	if (string == NULL)
-		return (NULL);
-	while (s[length] != '\0')
-	{
-		string[length] = s[length];
-		length++;
-	}
-	string[length] = '\0';
-	return (string);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*string;
-	int		length;
-	int		j;
-
-	length = 0;
-	j = 0;
-	string = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (string == NULL)
-		return (NULL);
-	while (s1[length] != '\0')
-	{
-		string[length] = s1[length];
-		length++;
-	}
-	while (s2[j] != '\0')
-	{
-		string[length + j] = s2[j];
-		j++;
-	}
-	string[j + length] = '\0';
-	return (string);
 }
