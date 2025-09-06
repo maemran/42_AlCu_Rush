@@ -1,8 +1,8 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -g -Werror 
 NAME = alum1
 
-SRCS = main.c get_next_line.c get_next_line_utils.c
+SRCS = main.c get_next_line.c get_next_line_utils.c utils.c linked_list_fun.c ft_atoi.c
 
 OBJS_DIR = OBJS
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))

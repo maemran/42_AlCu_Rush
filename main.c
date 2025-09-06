@@ -3,79 +3,135 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maemran <maemran@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salshaha <salshaha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 18:31:39 by salshaha          #+#    #+#             */
-/*   Updated: 2025/09/06 09:44:31 by maemran          ###   ########.fr       */
+/*   Updated: 2025/09/06 18:17:23 by salshaha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nim.h"
 
-
-// void game()
-// {
-//     while ()
-// }
-void	ft_putchar_fd(char c, int fd)
+int check_move(int matches, t_list *node)
 {
-	write(fd, &c, 1);
+    if (matches > node->content)
+        return (0);
+    return (1);
 }
 
-void	ft_putstr_fd(char *s, int fd)
+void    ai_move(t_game *data) 
 {
-	int	length;
+    t_list  *node;
 
-	length = 0;
-	while (s[length] != 0)
-	{
-		ft_putchar_fd(s[length], fd);
-		length++;
-	}
+    data->player_flag = 0;
+    node = ft_lstlast(data->lst);
+    data->ai_matches = node->content;
+    if ((node->content % 4 == 1) || (node->content % 4 == 0))
+    {
+        node->content -= 1;
+        data->ai_matches = 1;
+    }
+    else
+    {
+        if (check_move(((node->content - 1) % 4), node))
+            node->content = node->content - (node->content - 1) % 4;
+        data->ai_matches = (data->ai_matches - 1) % 4;
+    }
+    if (node->content == 0)
+        remove_last_node (&data->lst);
 }
 
-void	print_map(char **array, int *type)
+int     check_input(char *str)
 {
-	int		length;
-    int num;
     int i;
-    int j;
+    int num;
 
-	length = 0;
-    i = 1;
-    j = 1;
-    if (*type == 1)
+    i = 0;
+    while (str[i])
     {
-        while (array[length])
+        if (!(str[i] >= '0' && str[i] <= '3'))
         {
-            ft_putstr_fd(array[length], 1);
-            length++;
-        }       
-    }
-    if (*type == 2)
-    {
-        while (array[length])
-        {
-            j++;
-            num = atoi(array[length]);
-            while (num > 0)
-            {
-                write (1, "| ", 2);
-                num--;
-            }
-            write (1, "\n", 1);
-            while (i > 0)
-            {
-                write (1, " ", 1);
-                i--;
-            }
-            i = j;
-            length++;
+            ft_putstr_fd("Invalid choice\n", 2);
+            return (-1);
         }
+        i++;
     }
+    num = ft_atoi(str);
+    if (!(num >= 1 && num <= 3))
+    {
+        ft_putstr_fd("Invalid choice\n", 2);
+        return (-1);
+    }
+    return (num);
+}
+            
+void    player_move(t_game *data)
+{
+    int flag;
+    char    *str;
+    int num;
+    t_list  *node;
+
+    flag = 1;
+    data->player_flag = 1;
+    node = ft_lstlast(data->lst);
+    ft_putstr_fd("Please choose between 1 and 3 items\n", 1);
+    str = get_next_line(0);
+    str[ft_strlen(str) - 1] = '\0';
+    while (flag)
+    {
+        num = check_input(str);
+        if (num == -1)
+        {
+            free(str);
+            ft_putstr_fd("Please choose between 1 and 3 items\n", 1);
+            str = get_next_line(0);
+            str[ft_strlen(str) - 1] = '\0';
+        }
+        else if (!check_move(num, node))
+        {
+            free(str);
+            ft_putstr_fd("Invalid choice\n", 2);
+            ft_putstr_fd("Please choose between 1 and 3 items\n", 1);
+            str = get_next_line(0);
+            str[ft_strlen(str) - 1] = '\0';
+        }
+        else
+            flag = 0;
+    }
+    node->content -= num;
+    if (node->content == 0)
+        remove_last_node (&data->lst);
+}
+                                
+void game(t_game *data)
+{
+    char num;
+
+    while (data->lst)
+    {
+        ft_putstr_fd("\033[32mAI turn\033[0m\n", 1);
+        ai_move(data);
+        if (!data->lst)
+            break;
+        num = data->ai_matches + '0';
+        print_heaps(data->lst);
+        ft_putstr_fd("\n", 1);
+        ft_putstr_fd("AI took ", 1);
+        write(1, &num, 1);
+        ft_putstr_fd("\n", 1);
+        ft_putstr_fd("\033[31mplayer turn\033[0m\n", 1);
+        player_move(data);
+        print_heaps(data->lst);
+        ft_putstr_fd("\n", 1);
+    }
+    if (data->player_flag == 1)
+        ft_putstr_fd("\nYou are lose!\n", 1);
+    else
+        ft_putstr_fd("\nYou are the winner! Congratulations!\n", 1);
 }
 
-int check_map(char **map, int *type)
+int check_map(t_game *data, int *type)
 {
     int i;
     int j;
@@ -86,35 +142,46 @@ int check_map(char **map, int *type)
     i = 0;
     flag_num = 0;
     flag_pipe = 0;
-    while (map[i])
+    while (data->map[i])
     {
-        while (map[i][j])
+        j = 0;
+        while (data->map[i][j])
         {
-            if (map[i][j] > '0' && map[i][j] < '9')
+            if ((data->map[i][j] > '0' && data->map[i][j] < '9'))
                 flag_num = 1;
-            else if (map[i][j] == '|' || map[i][j] == ' ')
+            else if (data->map[i][j] == '|' || data->map[i][j] == ' ')
                 flag_pipe = 1;
             else
             {
+                ft_free_tow_d_array(data->map);
+                free(data);
                 write(2, "ERROR\n", 6);
                 return (1);
             }
+            j++;
         }
+        i++;
     }
     if (flag_num == 1 && flag_pipe == 1)
     {
+        ft_free_tow_d_array(data->map);
+        free(data);
         write(2, "ERROR\n", 6);
         return (1);
     }
+    i = 0;
     if (flag_num == 1)
     {
-        while (map[i])
+        while (data->map[i])
         {
-            if (atoi(map[i]) > 10000 || atoi(map[i]) < 1)
+            if (ft_atoi(data->map[i]) > 10000 || ft_atoi(data->map[i]) < 1)
             {
+                ft_free_tow_d_array(data->map);
+                free(data);
                 write(2, "ERROR\n", 6);
                 return (1);
             }
+            i++;
         }
     }
     if (flag_pipe == 1)
@@ -137,7 +204,10 @@ int heaps_num(char *file, t_game *data)
     while (str)
     {
         if (str[0] == '\n')
+        {
+            ft_putstr_fd("ERROR\n", 2);
             return (-1);
+        }
         free(str);
         str = get_next_line(fd);
         count++;
@@ -181,6 +251,8 @@ void	store_file(t_game *data)
     str = get_next_line(fd);
     while (str)
     {
+        if ((ft_strlen(str) - 1) != 0)
+            str[ft_strlen(str) - 1] = '\0';
         data->map[i] = str;
         str = get_next_line(fd);
         i++;
@@ -188,14 +260,52 @@ void	store_file(t_game *data)
     data->map[i] = NULL;
 }
 
+void add_list(t_game *data)
+{
+    int i;
+
+    i = 1;
+	data->lst = ft_lstnew(ft_atoi(data->map[0]));
+    while (data->map[i])
+    {
+        add_node(&data->lst, ft_atoi(data->map[i]));
+        i++;
+    }
+}
+
+void    change_to_num(t_game *data)
+{
+    int j;
+    int i;
+    int count;
+    
+
+    j = 0;
+    i = 0;
+    count = 0;
+    while (data->map[i])
+    {
+        j = 0;
+        count = 0;
+        while (data->map[i][j])
+        {
+            if(data->map[i][j] == '|')
+                count++;
+            j++;
+        }
+        add_node(&data->lst, count);
+        i++;
+    }
+}
+
 int main(int argc, char **argv)
 {
     t_game *data;
     int i;
-    // int type;
+    int type;
 	
     i = 0;
-    // type = 0;
+    type = 0;
     data = malloc(sizeof(t_game));
     if (argc == 1)
         data->size = read_from_user(data);
@@ -209,21 +319,21 @@ int main(int argc, char **argv)
 	if (data->size == -1 || data->size == 0)
 		return (1);
 	store_file(data);
-    while (data->map[i])
-    {
-        printf("%s", data->map[i]);
-        i++;
-    }
-    // if (check_map(map, &type))
-    //     return (1);
-    // print_map(map, &type);
-    
+    if (check_map(data, &type))
+        return (1);
+    // print_map(data, &type);
+    if (type == 1)
+        change_to_num(data);
+    if (type == 2)
+        add_list(data);
+    print_heaps(data->lst);
+    game(data);
 }
 
 
 //  Fix last problem          ✅
 //  
-//  convert char **map to array of integers ->  two dimensional array of integer
+//  convert char **map to array of integers ->  two dimensional array of integer ✅
 //
 //  take input from user
 //
