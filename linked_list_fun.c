@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list_fun.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salshaha <salshaha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: salshaha <salshaha@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 11:50:39 by salshaha          #+#    #+#             */
-/*   Updated: 2025/09/06 17:29:46 by salshaha         ###   ########.fr       */
+/*   Updated: 2025/09/14 23:26:01 by salshaha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ void	print_heaps(t_list *head)
     while (head) 
 	{
         for (int i = 0; i < row; i++)
-            printf(" ");
+			write(1, " ", 1);
         for (int i = 0; i < head->content; i++)
-            printf("| ");
-        printf("\n");
+			write(1, "| ", 2);
+		write(1, "\n", 1);
         row++;
         head = head->next;
     }

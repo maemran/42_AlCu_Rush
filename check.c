@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maemran <maemran@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salshaha <salshaha@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 18:57:44 by maemran           #+#    #+#             */
-/*   Updated: 2025/09/06 18:58:12 by maemran          ###   ########.fr       */
+/*   Updated: 2025/09/14 23:24:53 by salshaha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int check_map(t_game *data, int *type)
         j = 0;
         while (data->map[i][j])
         {
-            if ((data->map[i][j] > '0' && data->map[i][j] < '9'))
+            if ((data->map[i][j] >= '0' && data->map[i][j] <= '9'))
                 flag_num = 1;
             else if (data->map[i][j] == '|' || data->map[i][j] == ' ')
                 flag_pipe = 1;
